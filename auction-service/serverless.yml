@@ -1,0 +1,51 @@
+service: auction-service
+
+plugins:
+  - serverless-bundle
+  - serverless-pseudo-parameters
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  memorySize: 256
+  stage: ${opt:stage, 'dev'}
+  # environment:
+  #   AUCTIONS_TABLE_NAME : ${ }
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+       dynamodb:PutItem
+      Resource :
+       - arn:aws:dynamodb:us-east-1:238977160965:table/AuctionsTable
+    # - ${file(iam/AuctionsTableIAM.yml):AuctionsTableIAM}
+    
+resources:
+ Resources: 
+    AuctionsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: AuctionsTable
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions: 
+          - AttributeName: id
+            AttributeType: S 
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+               
+  
+functions:
+  createAuction:
+    handler: src/handlers/createAuction.handler
+    events:
+      - http:
+          method: POST
+          path: /auction
+
+
+custom: 
+  AuctionsTable:
+   name: !Ref AuctionsTable
+   arn:  !GetAtt AuctionsTable.arn
+  bundle:
+    linting: false
