@@ -5,7 +5,12 @@
   "author": "Ariel Weinberger <ariel@codingly.io>",
   "license": "MIT",
   "dependencies": {
+    "@middy/core": "^5.1.0",
+    "@middy/http-error-handler": "^5.1.0",
+    "@middy/http-event-normalizer": "^5.1.0",
+    "@middy/http-json-body-parser": "^5.1.0",
     "aws-sdk": "^2.1511.0",
+    "http-errors": "^2.0.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
